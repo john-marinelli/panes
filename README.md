@@ -3,6 +3,8 @@
 A [Bubble Tea](https://github.com/charmbracelet/bubbletea) component for 
 creating multi-pane applications.
 
+![example](./images/demo.gif)
+
 ## Default Keybinds
 
 Use ctrl+h, ctrl+j, ctrl+k and ctrl+l to switch between panes, with only the 
