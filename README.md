@@ -25,3 +25,22 @@ To describe a pane layout, use a 2D slice of Models like so:
     )
 `
 
+## Transitions
+
+To execute a function when focus enters and leaves a pane, implement In and Out
+methods on your model like so:
+
+`go
+    func (m Model) In() tea.Model {
+        m.Focus()
+        return m
+    }
+
+    func (m Model) Out() tea.Model {
+        m.Blur()
+        return m
+    }
+`
+
+
+

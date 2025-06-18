@@ -8,6 +8,14 @@ import (
 
 const borderWidth int = 1
 
+type TransitionIn interface {
+	In() tea.Model
+}
+
+type TransitionOut interface {
+	Out() tea.Model
+}
+
 type resizer func(msg tea.WindowSizeMsg) tea.WindowSizeMsg
 
 type pos struct {
@@ -61,6 +69,10 @@ func New(sections [][]tea.Model) Model {
 				Height: (msg.Height / len(sections)) - (borderWidth * 2),
 			}
 		})
+	}
+
+	if i, ok := sections[0][0].(TransitionIn); ok {
+		sections[0][0] = i.In()
 	}
 
 	return Model{
@@ -150,6 +162,10 @@ func (m Model) View() string {
 }
 
 func (m *Model) switchPane(msg tea.KeyMsg) {
+	if o, ok := m.sections[m.active.y][m.active.x].(TransitionOut); ok {
+		m.sections[m.active.y][m.active.x] = o.Out()
+	}
+
 	switch {
 	case key.Matches(msg, m.KeyMap.Up):
 		m.active = m.calcVertical(-1)
@@ -159,6 +175,10 @@ func (m *Model) switchPane(msg tea.KeyMsg) {
 		m.active = m.calcHorizontal(1)
 	case key.Matches(msg, m.KeyMap.Left):
 		m.active = m.calcHorizontal(-1)
+	}
+
+	if i, ok := m.sections[m.active.y][m.active.x].(TransitionIn); ok {
+		m.sections[m.active.y][m.active.x] = i.In()
 	}
 }
 
